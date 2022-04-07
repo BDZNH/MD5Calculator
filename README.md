@@ -10,6 +10,7 @@
 1. wxWidgets  UI框架
 2. openssl  md5计算
 3. [crc32](https://web.mit.edu/freebsd/head/sys/libkern/crc32.c)
+4. [threadpool](https://github.com/lzpong/threadpool) 用以支持同时计算多个文件，同时计算的文件个数是CPU虚拟核心数。
 
 # 更新记录
  - 2022.04.07 初版提交
