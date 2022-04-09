@@ -24,9 +24,8 @@
     <ProjectGuid>{92a1d93b-66bb-4fc1-ad19-8c51dcdb5ad2}</ProjectGuid>
     <RootNamespace>MD5Calculator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <VcpkgTriplet>x64-windows-static</VcpkgTriplet>
-    <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
-    <VcpkgEnabled>true</VcpkgEnabled>
+	<VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+	<VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
