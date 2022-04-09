@@ -127,7 +127,7 @@ void MyFrame::OnOpenFile(wxCommandEvent& event)
     if (paths.size() > 0)
     {
         wxArrayString files;
-        for (int i= 0; i < paths.size(); i++)
+        for (size_t i= 0; i < paths.size(); i++)
         {
             if (wxFileExists(paths[i]))
             {
