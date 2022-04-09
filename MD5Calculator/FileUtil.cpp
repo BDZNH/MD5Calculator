@@ -59,7 +59,7 @@ void CalFileHash(wxString filename, FileUtil* callback)
 			while (readsize > 0)
 			{
 				totalReadedSize += readsize;
-				crcvalue = calculate_crc32c(crcvalue, buffer, (unsigned int)readsize);
+				crcvalue = calculate_crc32(crcvalue, buffer, (unsigned int)readsize);
 				MD5_Update(&c, buffer, readsize);
 				long now = std::clock();
 				if ((now - before) > 100)
