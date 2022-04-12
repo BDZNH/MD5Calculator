@@ -25,7 +25,7 @@ public:
 class FileHashInfoList: public wxListCtrl, public FileUtil
 {
 public:
-	FileHashInfoList(wxWindow* parent,wxWindowID id,const wxPoint& point,const wxSize& size,long style, ListCtrlCallBack* cb);
+	FileHashInfoList(wxWindow* parent,wxWindowID id,const wxPoint& point,const wxSize& size,long style, ListCtrlCallBack* cb, std::recursive_mutex& globalMutex);
 	~FileHashInfoList();
 	long InsertItem(const wxString& label);
 	void OnStartCalculate(const wxString& filepath);
@@ -41,7 +41,6 @@ public:
 	void ClearAllItem(wxCommandEvent& event);
 	void SaveAllFileInfo(FILE* file);
 
-	void NotifyStartCalculate();
 	bool IsCalculatFinished();
 	
 private:
@@ -59,7 +58,7 @@ private:
 	std::unordered_map<wxString, long> mFilesStateList;
 	std::vector<int> mSelectedItem;
 	std::threadpool* mExector = nullptr;
-	std::mutex mFileListLock;
+	std::recursive_mutex& mFileListLock;
 	size_t mCalculatingFilesCount = 0;
 };
 

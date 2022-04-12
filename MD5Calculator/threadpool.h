@@ -69,14 +69,9 @@ namespace std
             if (_idlThrNum < 1 && _pool.size() < THREADPOOL_MAX_NUM)
                 addThread(1);
 #endif // !THREADPOOL_AUTO_GROW
-            //_task_cv.notify_one(); // 唤醒一个线程执行
+            _task_cv.notify_one(); // 唤醒一个线程执行
 
             return future;
-        }
-
-        void notifyalltask()
-        {
-            _task_cv.notify_all();
         }
 
         //空闲线程数量

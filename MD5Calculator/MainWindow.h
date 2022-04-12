@@ -38,6 +38,6 @@ private:
     wxDECLARE_EVENT_TABLE();
 
     FileHashInfoList* mListCtrl = nullptr;
-    std::mutex mLock;
+    std::recursive_mutex mLock;
 };
 

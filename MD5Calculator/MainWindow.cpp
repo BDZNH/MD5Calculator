@@ -54,7 +54,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     wxPanel* mainPanel = new wxPanel(this,wxID_ANY,wxDefaultPosition,windowsize);
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     //mListCtrl = new wxListCtrl(mainPanel, wxID_ANY,wxDefaultPosition, { 800,600 }, wxLC_REPORT);
-    mListCtrl = new FileHashInfoList(mainPanel, wxID_ANY, wxDefaultPosition, windowsize, wxLC_REPORT,this);
+    mListCtrl = new FileHashInfoList(mainPanel, wxID_ANY, wxDefaultPosition, windowsize, wxLC_REPORT,this, mLock);
     mListCtrl->InsertColumn(0, "ÐòºÅ");
     mListCtrl->InsertColumn(1, "ÎÄ¼þ");
     mListCtrl->InsertColumn(2, "CRC32");
@@ -85,7 +85,7 @@ void MyFrame::OnExit(wxCommandEvent& event)
 
 void MyFrame::OnCloseWindow(wxCloseEvent& event)
 {
-    std::unique_lock<std::mutex> _l(mLock);
+    std::unique_lock<std::recursive_mutex> _l(mLock);
     if (mListCtrl->IsCalculatFinished())
     {
         delete mListCtrl;
@@ -116,7 +116,7 @@ void MyFrame::OnAbout(wxCommandEvent& event)
 }
 void MyFrame::OnOpenFile(wxCommandEvent& event)
 {
-    std::unique_lock<std::mutex> _l(mLock);
+    std::unique_lock<std::recursive_mutex> _l(mLock);
     wxFileDialog openFileDialog(this, _("Open XYZ file"), "", "","*", wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE);
     if (openFileDialog.ShowModal() == wxID_CANCEL)
     {
@@ -140,7 +140,6 @@ void MyFrame::OnOpenFile(wxCommandEvent& event)
             {
                 mListCtrl->InsertItem(files[i]);
             }
-            mListCtrl->NotifyStartCalculate();
         }
         else
         {
@@ -166,7 +165,7 @@ void MyFrame::OnSaveAllFileInfoAs(wxCommandEvent& event)
     FILE* file = fopen(saveFileDialog.GetPath().c_str(), "w+");
     if (file)
     {
-        std::unique_lock<std::mutex> _l(mLock);
+        std::unique_lock<std::recursive_mutex> _l(mLock);
         mListCtrl->SaveAllFileInfo(file);
         fclose(file);
     }
@@ -179,7 +178,7 @@ void MyFrame::OnDrapFiles(wxDropFilesEvent& event)
 {
     if (event.GetNumberOfFiles() > 0)
     {
-        std::unique_lock<std::mutex> _l(mLock);
+        std::unique_lock<std::recursive_mutex> _l(mLock);
         wxString* dropped = event.GetFiles();
         if (!dropped)
             return;
@@ -202,7 +201,6 @@ void MyFrame::OnDrapFiles(wxDropFilesEvent& event)
             {
                 mListCtrl->InsertItem(files[i]);
             }
-            mListCtrl->NotifyStartCalculate();
         }
         else
         {

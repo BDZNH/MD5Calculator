@@ -1,8 +1,8 @@
 #include<wx/msgdlg.h>
 #include "FileHashInfoList.h"
 
-FileHashInfoList::FileHashInfoList(wxWindow* parent, wxWindowID id, const wxPoint& point, const wxSize& size,long style,ListCtrlCallBack* cb)
-	:wxListCtrl(parent, id, point, size, style)
+FileHashInfoList::FileHashInfoList(wxWindow* parent, wxWindowID id, const wxPoint& point, const wxSize& size,long style,ListCtrlCallBack* cb, std::recursive_mutex& globalMutex)
+	:wxListCtrl(parent, id, point, size, style), mFileListLock(globalMutex)
 {
 	mCallBack = cb;
 	mParent = parent;
@@ -21,7 +21,7 @@ FileHashInfoList::FileHashInfoList(wxWindow* parent, wxWindowID id, const wxPoin
 
 FileHashInfoList::~FileHashInfoList()
 {
-	std::unique_lock<std::mutex> _l(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _l(mFileListLock);
 	if (mExector != nullptr)
 	{
 		delete mExector;
@@ -38,7 +38,7 @@ FileHashInfoList::~FileHashInfoList()
 
 long FileHashInfoList::InsertItem(const wxString& label)
 {
-	std::unique_lock<std::mutex> _l(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _l(mFileListLock);
 	if (mExector == nullptr)
 	{
 		int threadNum = std::thread::hardware_concurrency() > 0 ? std::thread::hardware_concurrency() : 4;
@@ -158,7 +158,7 @@ bool FileHashInfoList::IsExistSuchFile(const wxString& filepath)
 
 void FileHashInfoList::OnStartCalculate(const wxString& filepath)
 {
-	std::unique_lock<std::mutex> _l(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _l(mFileListLock);
 	std::unordered_map<wxString, long>::const_iterator iter = mFilesStateList.find(filepath);
 	if (iter != mFilesStateList.end())
 	{
@@ -173,7 +173,7 @@ void FileHashInfoList::OnStartCalculate(const wxString& filepath)
 
 void FileHashInfoList::OnProgress(const wxString& filepath, int progress)
 {
-	std::unique_lock<std::mutex> _l(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _l(mFileListLock);
 	std::unordered_map<wxString, long>::const_iterator iter = mFilesStateList.find(filepath);
 	if (iter != mFilesStateList.end())
 	{
@@ -184,7 +184,7 @@ void FileHashInfoList::OnProgress(const wxString& filepath, int progress)
 
 void FileHashInfoList::OnStopCalculate(const wxString& filepath, const std::string& crc32, const std::string& md5)
 {
-	std::unique_lock<std::mutex> _l(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _l(mFileListLock);
 	std::unordered_map<wxString, long>::const_iterator iter = mFilesStateList.find(filepath);
 	if (iter != mFilesStateList.end())
 	{
@@ -235,7 +235,7 @@ void FileHashInfoList::CopySelectedFileInfo(wxCommandEvent& event)
 
 void FileHashInfoList::CopySelectedAllFileInfo(wxCommandEvent& event)
 {
-	std::unique_lock<std::mutex> _ll(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _ll(mFileListLock);
 	int itemsize = GetItemCount();
 	
 	if (itemsize > 0)
@@ -283,7 +283,7 @@ void FileHashInfoList::CopySelectedAllFileInfo(wxCommandEvent& event)
 
 void FileHashInfoList::ClearAllItem(wxCommandEvent& event)
 {
-	std::unique_lock<std::mutex> _ll(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _ll(mFileListLock);
 	size_t size = mSelectedItem.size();
 	for (size_t i = 0; i < size; i++)
 	{
@@ -304,7 +304,7 @@ void FileHashInfoList::SaveAllFileInfo(FILE* file)
 {
 	if (file)
 	{
-		std::unique_lock<std::mutex> _ll(mFileListLock);
+		std::unique_lock<std::recursive_mutex> _ll(mFileListLock);
 		int itemsize = GetItemCount();
 
 		if (itemsize > 0)
@@ -342,21 +342,15 @@ void FileHashInfoList::SaveAllFileInfo(FILE* file)
 	}
 }
 
-void FileHashInfoList::NotifyStartCalculate()
-{
-	std::unique_lock<std::mutex> _ll(mFileListLock);
-	mExector->notifyalltask();
-}
-
 bool FileHashInfoList::IsCalculatFinished()
 {
-	std::unique_lock<std::mutex> _ll(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _ll(mFileListLock);
 	return mCalculatingFilesCount == 0;
 }
 
 void FileHashInfoList::CopySelectedFileInfo(bool copyFilePath = false, bool copyFileCrc32 = false, bool copyFileMd5 =false)
 {
-	std::unique_lock<std::mutex> _ll(mFileListLock);
+	std::unique_lock<std::recursive_mutex> _ll(mFileListLock);
 	size_t size = mSelectedItem.size();
 	size_t selectedItemCount = 0;
 	size_t failedCount = 0;
