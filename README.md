@@ -9,7 +9,7 @@
 # 依赖
 1. wxWidgets  UI框架
 2. openssl  md5计算
-3. [crc32](https://gist.github.com/timepp/1f678e200d9e0f2a043a9ec6b3690635)
+3. [crc32](https://rosettacode.org/wiki/CRC-32#C)
 4. [threadpool](https://github.com/lzpong/threadpool) 用以支持同时计算多个文件，同时计算的文件个数是CPU虚拟核心数。
 
 # 更新记录
