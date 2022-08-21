@@ -37,7 +37,6 @@ static uint32_t __g__crc32_table[256] = {
 
 uint32_t calculate_crc32(uint32_t crc, const unsigned char* buf, size_t len)
 {
-
 	crc = ~crc;
 	for (size_t i = 0; i < len; i++)
 	{

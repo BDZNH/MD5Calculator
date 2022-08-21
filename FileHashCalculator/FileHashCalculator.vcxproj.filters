@@ -18,44 +18,37 @@
     <ClCompile Include="App.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
+    <ClCompile Include="MainFrame.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FileUtil.cpp">
+    <ClCompile Include="MainWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="crc32.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FileHashInfoList.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MainFrame.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="MainWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="threadpool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="FileUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="crc32.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FileHashInfoList.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonEmnuID.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="threadpool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico">
@@ -63,11 +56,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\README.md" />
+    <None Include="small.xpm" />
   </ItemGroup>
 </Project>
