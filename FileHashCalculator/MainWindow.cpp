@@ -638,6 +638,7 @@ void MainWindow::OnOpenFileSelected(wxCommandEvent& event)
     openFileDialog.GetPaths(paths);
     if (paths.size() > 0)
     {
+        std::unique_lock<std::mutex> _l(mMutex);
         wxArrayString files;
         for (size_t i = 0; i < paths.size(); i++)
         {
