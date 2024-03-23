@@ -46,6 +46,7 @@ protected:
 	wxMenuItem* mMenuItemsha256;
 	wxMenuItem* mMenuItemsha384;
 	wxMenuItem* mMenuItemsha512;
+	wxMenu* mMenuTools;
 	wxMenu* mMenuHelp;
 	wxStatusBar* mStatusBar;
 
@@ -63,13 +64,15 @@ protected:
 	virtual void OnSha384Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnSha512Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnClearListSelected(wxCommandEvent& event) { event.Skip(); }
+	virtual void OnQrCodeSelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnAboutMeSelected(wxCommandEvent& event) { event.Skip(); }
 
 
 public:
 
-	MainFrame(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(500, 300), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
+	MainFrame(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(1280, 720), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
 
 	~MainFrame();
 
 };
+

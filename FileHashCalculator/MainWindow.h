@@ -68,6 +68,7 @@ private:
 	void OnSha384Selected(wxCommandEvent& event) wxOVERRIDE;
 	void OnSha512Selected(wxCommandEvent& event) wxOVERRIDE;
 	void OnClearListSelected(wxCommandEvent& event) wxOVERRIDE;
+	void OnQrCodeSelected(wxCommandEvent& event) wxOVERRIDE;
 	void OnAboutMeSelected(wxCommandEvent& event) wxOVERRIDE;
 
 	~MainWindow();

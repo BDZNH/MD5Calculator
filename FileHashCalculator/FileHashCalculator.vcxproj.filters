@@ -27,6 +27,12 @@
     <ClCompile Include="crc32.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="QRCodeDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QRCodeDialogImpl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrame.h">
@@ -44,14 +50,29 @@
     <ClInclude Include="threadpool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="QRCodeDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QRCodeDialogImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="svpng.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+    <ResourceCompile Include="appicon.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="qrcode.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

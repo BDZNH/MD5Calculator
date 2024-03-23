@@ -9,8 +9,7 @@
 
 MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
-	wxSize minSize(800, 600);
-	this->SetSizeHints(FromDIP(minSize), wxDefaultSize);
+	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
 	wxBoxSizer* mMainBoxSizer;
 	mMainBoxSizer = new wxBoxSizer(wxVERTICAL);
@@ -71,6 +70,13 @@ MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, con
 
 	mMenuBar->Append(mMenuEdit, wxT("编辑"));
 
+	mMenuTools = new wxMenu();
+	wxMenuItem* m_menuItem13;
+	m_menuItem13 = new wxMenuItem(mMenuTools, wxID_ANY, wxString(wxT("二维码生成器")), wxEmptyString, wxITEM_NORMAL);
+	mMenuTools->Append(m_menuItem13);
+
+	mMenuBar->Append(mMenuTools, wxT("小工具"));
+
 	mMenuHelp = new wxMenu();
 	wxMenuItem* mMenuItemAbout;
 	mMenuItemAbout = new wxMenuItem(mMenuHelp, wxID_ANY, wxString(wxT("关于")), wxT("关于本应用"), wxITEM_NORMAL);
@@ -98,6 +104,7 @@ MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, con
 	mMenuEditAddAlgorithm->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnSha384Selected), this, mMenuItemsha384->GetId());
 	mMenuEditAddAlgorithm->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnSha512Selected), this, mMenuItemsha512->GetId());
 	mMenuEdit->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnClearListSelected), this, mMenuItemClear->GetId());
+	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnQrCodeSelected), this, m_menuItem13->GetId());
 	mMenuHelp->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnAboutMeSelected), this, mMenuItemAbout->GetId());
 }
 

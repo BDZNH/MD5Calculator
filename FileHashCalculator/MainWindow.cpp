@@ -11,7 +11,7 @@
 #include <openssl/opensslv.h >
 #include "crc32.h"
 #include "small.xpm"
-
+#include "QRCodeDialogImpl.h"
 static long long MapBlockSize(long long filesize)
 {
     static long _1KB = 1 * 1024;
@@ -638,7 +638,6 @@ void MainWindow::OnOpenFileSelected(wxCommandEvent& event)
     openFileDialog.GetPaths(paths);
     if (paths.size() > 0)
     {
-        std::unique_lock<std::mutex> _l(mMutex);
         wxArrayString files;
         for (size_t i = 0; i < paths.size(); i++)
         {
@@ -843,6 +842,12 @@ void MainWindow::OnClearListSelected(wxCommandEvent& event)
     mFileListContainers.clear();
 }
 
+void MainWindow::OnQrCodeSelected(wxCommandEvent& event)
+{
+    QRCodeDialogImpl dialog(this);
+    dialog.ShowModal();
+}
+
 void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
 {
     wxString content = wxT("一个简单的用来计算文件哈希（CRC32/MD5/SHA1/SHA224/SHA256/SHA384/SHA512）的小工具\r\n");
@@ -851,7 +856,8 @@ void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
     content.Append("\r\n");
     content.Append(wxT("openssl "));
     content.Append(wxString::Format("%d.%d.%d\r\n", OPENSSL_VERSION_MAJOR, OPENSSL_VERSION_MINOR, OPENSSL_VERSION_PATCH));
-    content.Append(wxT("threadpool https://github.com/lzpong/"));
+    content.Append(wxT("threadpool https://github.com/lzpong/\r\n"));
+    content.Append(QRCodeDialogImpl::GetVersion());
     wxMessageBox(content, wxT("关于本应用"), wxOK | wxICON_INFORMATION, this);
 }
 
@@ -890,7 +896,7 @@ MainWindow::~MainWindow()
 }
 MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器"))
 {
-    SetIcon(wxIcon(smallxpm));
+    SetIcon(wxICON(aaaaaaappIcon));
     mSerialNumberColumn = mListCtrlFileList->AppendColumn(wxT("序号"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
     mFilePathColumn = mListCtrlFileList->AppendColumn(wxT("文件路径"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
 
