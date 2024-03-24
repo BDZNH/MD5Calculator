@@ -100,6 +100,7 @@ wxString QRCodeDialogImpl::GetVersion()
     wxString ret;
     ret.Append("libqrencode https://github.com/fukuchi/libqrencode");
     ret.Append("\r\n");
+    ret.Append("\t");
     ret.Append("svpng 0.1.1 http://github.com/miloyip/svpng");
     return ret;
 }

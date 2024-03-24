@@ -5,6 +5,7 @@
 #include <wx/menu.h>
 #include <wx/filedlg.h>
 #include <wx/version.h>
+#include <wx/aboutdlg.h>
 #include <vector>
 #include <sstream>
 #include <openssl/evp.h>
@@ -850,15 +851,27 @@ void MainWindow::OnQrCodeSelected(wxCommandEvent& event)
 
 void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
 {
-    wxString content = wxT("一个简单的用来计算文件哈希（CRC32/MD5/SHA1/SHA224/SHA256/SHA384/SHA512）的小工具\r\n");
-    content.Append(wxT("依赖于\r\n"));
+    wxString content = wxT("一个简单的用来计算文件哈希（CRC32/MD5/SHA1/SHA224/SHA256/SHA384/SHA512）和生成二维码的小工具\r\n");
+    content.Append(wxT("依赖于以下开源软件开发:\r\n"));
+    content.Append(wxT("\t"));
     content.Append(wxVERSION_STRING);
     content.Append("\r\n");
+    content.Append(wxT("\t"));
     content.Append(wxT("openssl "));
     content.Append(wxString::Format("%d.%d.%d\r\n", OPENSSL_VERSION_MAJOR, OPENSSL_VERSION_MINOR, OPENSSL_VERSION_PATCH));
+    content.Append(wxT("\t"));
     content.Append(wxT("threadpool https://github.com/lzpong/\r\n"));
+    content.Append(wxT("\t"));
     content.Append(QRCodeDialogImpl::GetVersion());
-    wxMessageBox(content, wxT("关于本应用"), wxOK | wxICON_INFORMATION, this);
+    wxAboutDialogInfo descrip;
+    descrip.SetWebSite(wxT("https://github.com/BDZNH/MD5Calculator"), wxT("GitHub"));
+    descrip.SetCopyright(wxT("2022-2024. (c)BDZNH"));
+    descrip.SetDescription(content);
+    descrip.SetName(GetTitle());
+    wxArrayString developers;
+    developers.push_back(wxT("BDZNH: https://github.com/BDZNH"));
+    descrip.SetDevelopers(developers);
+    wxAboutBox(descrip,this);
 }
 
 MainWindow::~MainWindow()
