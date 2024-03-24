@@ -54,26 +54,28 @@ private:
 	void OnCopyFilePathAndFileHashClicked(wxCommandEvent& event);
 	void CopySelectedItemInfo(long column);
 	void CopyStringToClipboard(const wxString& msg);
+protected:
+	virtual void OnItemDoubleClicked(wxListEvent& event) wxOVERRIDE;
+	virtual void OnItemRightClicked(wxListEvent& event) wxOVERRIDE;
+	virtual void OnOpenFileSelected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnSaveAsSelected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnExitAppSelected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnCRC32Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnMD5Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnSha1Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnSha224Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnSha256Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnSha384Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnSha512Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnClearListSelected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnQrCodeSelected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnBase64Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnAboutMeSelected(wxCommandEvent& event) wxOVERRIDE;
 
-	void OnItemDoubleClicked(wxListEvent& event) wxOVERRIDE;
-	void OnItemRightClicked(wxListEvent& event) wxOVERRIDE;
-	void OnOpenFileSelected(wxCommandEvent& event) wxOVERRIDE;
-	void OnSaveAsSelected(wxCommandEvent& event) wxOVERRIDE;
-	void OnExitAppSelected(wxCommandEvent& event) wxOVERRIDE;
-	void OnCRC32Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnMD5Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnSha1Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnSha224Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnSha256Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnSha384Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnSha512Selected(wxCommandEvent& event) wxOVERRIDE;
-	void OnClearListSelected(wxCommandEvent& event) wxOVERRIDE;
-	void OnQrCodeSelected(wxCommandEvent& event) wxOVERRIDE;
-	void OnAboutMeSelected(wxCommandEvent& event) wxOVERRIDE;
-
-	~MainWindow();
+	
 
 public:
+	~MainWindow();
     MainWindow(wxWindow* parent);
 };
 

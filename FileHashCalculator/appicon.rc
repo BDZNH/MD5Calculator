@@ -1,2 +1,3 @@
 aaaaaaappIcon ICON "app.ico"
 qrcodeIcon ICON "qrcode.ico"
+base64Icon ICON "base64.ico"

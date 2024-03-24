@@ -33,6 +33,12 @@
     <ClCompile Include="QRCodeDialogImpl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Base64Dialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Base64DialogImpl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrame.h">
@@ -57,6 +63,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="svpng.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Base64Dialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Base64DialogImpl.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

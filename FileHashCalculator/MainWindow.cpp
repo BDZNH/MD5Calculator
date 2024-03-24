@@ -13,6 +13,7 @@
 #include "crc32.h"
 #include "small.xpm"
 #include "QRCodeDialogImpl.h"
+#include "Base64DialogImpl.h"
 static long long MapBlockSize(long long filesize)
 {
     static long _1KB = 1 * 1024;
@@ -846,6 +847,12 @@ void MainWindow::OnClearListSelected(wxCommandEvent& event)
 void MainWindow::OnQrCodeSelected(wxCommandEvent& event)
 {
     QRCodeDialogImpl dialog(this);
+    dialog.ShowModal();
+}
+
+void MainWindow::OnBase64Selected(wxCommandEvent& event)
+{
+    Base64DialogImpl dialog(this);
     dialog.ShowModal();
 }
 

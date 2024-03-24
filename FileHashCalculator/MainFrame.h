@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
+// C++ code generated with wxFormBuilder (version 4.1.0-0-g733bf3d)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -65,6 +65,7 @@ protected:
 	virtual void OnSha512Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnClearListSelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnQrCodeSelected(wxCommandEvent& event) { event.Skip(); }
+	virtual void OnBase64Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnAboutMeSelected(wxCommandEvent& event) { event.Skip(); }
 
 
