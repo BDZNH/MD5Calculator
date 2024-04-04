@@ -14,6 +14,10 @@
 #include "small.xpm"
 #include "QRCodeDialogImpl.h"
 #include "Base64DialogImpl.h"
+
+#define UPDATE_TEXT_ID wxID_HIGHEST+1
+#define UPDATE_STATUS_ID UPDATE_TEXT_ID+1
+
 static long long MapBlockSize(long long filesize)
 {
     static long _1KB = 1 * 1024;
@@ -120,9 +124,9 @@ void MainWindow::OnDrapFiles(wxDropFilesEvent& event)
                     continue;
                 }
                 long itemCount = mListCtrlFileList->GetItemCount();
-                mFileListContainers[files[i]] = itemCount;
-                mListCtrlFileList->InsertItem(itemCount, wxString::Format("%ld",itemCount+1));
-                mListCtrlFileList->SetItem(itemCount, mFilePathColumn, files[i]);
+                long id = mListCtrlFileList->InsertItem(itemCount, wxString::Format("%ld",itemCount+1));
+                mFileListContainers[files[i]] = id;
+                mListCtrlFileList->SetItem(id, mFilePathColumn, files[i]);
                 mListCtrlFileList->SetColumnWidth(mFilePathColumn, wxLIST_AUTOSIZE_USEHEADER);
                 mCalculatingFileCount++;
                 mExector->commit(std::bind(&MainWindow::CalculatFileHash, this, files[i]));
@@ -166,14 +170,19 @@ void MainWindow::CalculatFileHash(wxString filepath)
         bool calsha512 = mMenuItemsha512->IsChecked();
 
         uint32_t crcvalue = 0;
-        EVP_MD_CTX* md5ctx = nullptr;
-        EVP_MD_CTX* sha1ctx = nullptr;
-        EVP_MD_CTX* sha224ctx = nullptr;
-        EVP_MD_CTX* sha256ctx = nullptr;
-        EVP_MD_CTX* sha384ctx = nullptr;
-        EVP_MD_CTX* sha512ctx = nullptr;
+        std::shared_ptr<EVP_MD_CTX> md5ctx(EVP_MD_CTX_new(),EVP_MD_CTX_free);
+        std::shared_ptr<EVP_MD_CTX> sha1ctx(EVP_MD_CTX_new(), EVP_MD_CTX_free);
+        std::shared_ptr<EVP_MD_CTX> sha224ctx(EVP_MD_CTX_new(), EVP_MD_CTX_free);
+        std::shared_ptr<EVP_MD_CTX> sha256ctx(EVP_MD_CTX_new(), EVP_MD_CTX_free);
+        std::shared_ptr<EVP_MD_CTX> sha384ctx(EVP_MD_CTX_new(), EVP_MD_CTX_free);
+        std::shared_ptr<EVP_MD_CTX> sha512ctx(EVP_MD_CTX_new(), EVP_MD_CTX_free);
 
-        unsigned char md5value[EVP_MAX_MD_SIZE] = { 0 }, sha1value[EVP_MAX_MD_SIZE] = { 0 }, sha224value[EVP_MAX_MD_SIZE] = { 0 }, sha256value[EVP_MAX_MD_SIZE] = { 0 }, sha384value[EVP_MAX_MD_SIZE] = { 0 }, sha512value[EVP_MAX_MD_SIZE] = { 0 };
+        unsigned char md5value[EVP_MAX_MD_SIZE] = { 0 }, 
+            sha1value[EVP_MAX_MD_SIZE] = { 0 }, 
+            sha224value[EVP_MAX_MD_SIZE] = { 0 }, 
+            sha256value[EVP_MAX_MD_SIZE] = { 0 }, 
+            sha384value[EVP_MAX_MD_SIZE] = { 0 }, 
+            sha512value[EVP_MAX_MD_SIZE] = { 0 };
         unsigned int md5len = 0, sha1len = 0, sha224len = 0, sha256len = 0, sha384len = 0, sha512len = 0;
         size_t readLen = file.Read(buffer.data(), bufferSize);
         if (exited)
@@ -182,35 +191,29 @@ void MainWindow::CalculatFileHash(wxString filepath)
         {
             clock_t before = 0;
             clock_t now = 0;
-            if (calmd5)
+            if (calmd5 && md5ctx != nullptr)
             {
-                md5ctx = EVP_MD_CTX_new();
-                EVP_DigestInit_ex2(md5ctx, EVP_get_digestbyname("md5"), NULL);
+                EVP_DigestInit_ex2(md5ctx.get(), EVP_get_digestbyname("md5"), NULL);
             }
-            if (calsha1)
+            if (calsha1 && sha1ctx != nullptr)
             {
-                sha1ctx = EVP_MD_CTX_new();
-                EVP_DigestInit_ex2(sha1ctx, EVP_get_digestbyname("sha1"), NULL);
+                EVP_DigestInit_ex2(sha1ctx.get(), EVP_get_digestbyname("sha1"), NULL);
             }
-            if (calsha224)
+            if (calsha224 && sha224ctx != nullptr)
             {
-                sha224ctx = EVP_MD_CTX_new();
-                EVP_DigestInit_ex2(sha224ctx, EVP_get_digestbyname("sha224"), NULL);
+                EVP_DigestInit_ex2(sha224ctx.get(), EVP_get_digestbyname("sha224"), NULL);
             }
-            if (calsha256)
+            if (calsha256 && sha256ctx != nullptr)
             {
-                sha256ctx = EVP_MD_CTX_new();
-                EVP_DigestInit_ex2(sha256ctx, EVP_get_digestbyname("sha256"), NULL);
+                EVP_DigestInit_ex2(sha256ctx.get(), EVP_get_digestbyname("sha256"), NULL);
             }
-            if (calsha384)
+            if (calsha384 && sha384ctx != nullptr)
             {
-                sha384ctx = EVP_MD_CTX_new();
-                EVP_DigestInit_ex2(sha384ctx, EVP_get_digestbyname("sha384"), NULL);
+                EVP_DigestInit_ex2(sha384ctx.get(), EVP_get_digestbyname("sha384"), NULL);
             }
-            if (calsha512)
+            if (calsha512 && sha512ctx != nullptr)
             {
-                sha512ctx = EVP_MD_CTX_new();
-                EVP_DigestInit_ex2(sha512ctx, EVP_get_digestbyname("sha512"), NULL);
+                EVP_DigestInit_ex2(sha512ctx.get(), EVP_get_digestbyname("sha512"), NULL);
             }
             size_t totalReadedSize = 0;
             if (exited)
@@ -229,29 +232,29 @@ void MainWindow::CalculatFileHash(wxString filepath)
                 {
                     crcvalue = calculate_crc32(crcvalue, buffer.data(), (unsigned int)readLen);
                 }
-                if (calmd5)
+                if (calmd5 && md5ctx != nullptr)
                 {
-                    EVP_DigestUpdate(md5ctx, buffer.data(), readLen);
+                    EVP_DigestUpdate(md5ctx.get(), buffer.data(), readLen);
                 }
-                if (calsha1)
+                if (calsha1 && sha1ctx != nullptr)
                 {
-                    EVP_DigestUpdate(sha1ctx, buffer.data(), readLen);
+                    EVP_DigestUpdate(sha1ctx.get(), buffer.data(), readLen);
                 }
-                if (calsha224)
+                if (calsha224 && sha224ctx != nullptr)
                 {
-                    EVP_DigestUpdate(sha224ctx, buffer.data(), readLen);
+                    EVP_DigestUpdate(sha224ctx.get(), buffer.data(), readLen);
                 }
-                if (calsha256)
+                if (calsha256 && sha256ctx != nullptr)
                 {
-                    EVP_DigestUpdate(sha256ctx, buffer.data(), readLen);
+                    EVP_DigestUpdate(sha256ctx.get(), buffer.data(), readLen);
                 }
-                if (calsha384)
+                if (calsha384 && sha384ctx != nullptr)
                 {
-                    EVP_DigestUpdate(sha384ctx, buffer.data(), readLen);
+                    EVP_DigestUpdate(sha384ctx.get(), buffer.data(), readLen);
                 }
-                if (calsha512)
+                if (calsha512 && sha512ctx != nullptr)
                 {
-                    EVP_DigestUpdate(sha512ctx, buffer.data(), readLen);
+                    EVP_DigestUpdate(sha512ctx.get(), buffer.data(), readLen);
                 }
                 readLen = file.Read(buffer.data(), bufferSize);
                 if (exited)
@@ -263,40 +266,34 @@ void MainWindow::CalculatFileHash(wxString filepath)
             {
                 UpdateFileHash(filepath, mFileCRC32Column, wxString::Format("%08X", crcvalue));
             }
-            if (calmd5)
+            if (calmd5 && md5ctx != nullptr)
             {
-                EVP_DigestFinal_ex(md5ctx, md5value, &md5len);
-                EVP_MD_CTX_free(md5ctx);
+                EVP_DigestFinal_ex(md5ctx.get(), md5value, &md5len);
                 UpdateFileHash(filepath, mFileMD5Column, CharArrayToHexString(md5value, md5len));
             }
-            if (calsha1)
+            if (calsha1 && sha1ctx != nullptr)
             {
-                EVP_DigestFinal_ex(sha1ctx, sha1value, &sha1len);
-                EVP_MD_CTX_free(sha1ctx);
+                EVP_DigestFinal_ex(sha1ctx.get(), sha1value, &sha1len);
                 UpdateFileHash(filepath, mFileSha1Column, CharArrayToHexString(sha1value, sha1len));
             }
-            if (calsha224)
+            if (calsha224 && sha224ctx != nullptr)
             {
-                EVP_DigestFinal_ex(sha224ctx, sha224value, &sha224len);
-                EVP_MD_CTX_free(sha224ctx);
+                EVP_DigestFinal_ex(sha224ctx.get(), sha224value, &sha224len);
                 UpdateFileHash(filepath, mFileSha224Column, CharArrayToHexString(sha224value, sha224len));
             }
-            if (calsha256)
+            if (calsha256 && sha256ctx != nullptr)
             {
-                EVP_DigestFinal_ex(sha256ctx, sha256value, &sha256len);
-                EVP_MD_CTX_free(sha256ctx);
+                EVP_DigestFinal_ex(sha256ctx.get(), sha256value, &sha256len);
                 UpdateFileHash(filepath, mFileSha256Column, CharArrayToHexString(sha256value, sha256len));
             }
-            if (calsha384)
+            if (calsha384 && sha384ctx != nullptr)
             {
-                EVP_DigestFinal_ex(sha384ctx, sha384value, &sha384len);
-                EVP_MD_CTX_free(sha384ctx);
+                EVP_DigestFinal_ex(sha384ctx.get(), sha384value, &sha384len);
                 UpdateFileHash(filepath, mFileSha384Column, CharArrayToHexString(sha384value, sha384len));
             }
-            if (calsha512)
+            if (calsha512 && sha512ctx != nullptr)
             {
-                EVP_DigestFinal_ex(sha512ctx, sha512value, &sha512len);
-                EVP_MD_CTX_free(sha512ctx);
+                EVP_DigestFinal_ex(sha512ctx.get(), sha512value, &sha512len);
                 UpdateFileHash(filepath, mFileSha512Column, CharArrayToHexString(sha512value, sha512len));
             }
             if (exited)
@@ -323,41 +320,19 @@ void MainWindow::CalculatFileHash(wxString filepath)
 
 void MainWindow::FinishCalculat()
 {
-    std::unique_lock<std::mutex> _l(mMutex);
-    mCalculatingFileCount--;
-    if (mCalculatingFileCount > 0)
-    {
-        wxString state = wxString::Format("有 %ld 个文件在计算中", mCalculatingFileCount);
-        mStatusBar->SetStatusText(state);
-    }
-    else if(mCalculatingFileCount == 0)
-    {
-        mStatusBar->SetStatusText(wxT("全部文件都已经计算完成"));
-        mMenuBar->EnableTop(0, true);
-        mMenuBar->EnableTop(1, true);
-        mMenuBar->EnableTop(2, true);
-    }
+    wxCommandEvent* event = new wxCommandEvent(wxEVT_COMMAND_TEXT_UPDATED, UPDATE_STATUS_ID);
+    wxQueueEvent(this,event);
 }
 
 void MainWindow::UpdateFileHash(wxString filepath, long columnid, std::string msg)
 {
-    if (columnid <= 1)
-    {
-        return;
-    }
-    auto iter = mFileListContainers.find(filepath);
-    if (iter == mFileListContainers.end())
-    {
-        return;
-    }
-    long itemid = iter->second;
-    std::unique_lock<std::mutex> _l(mMutex);
-    mListCtrlFileList->SetItem(itemid, columnid, msg);
-    mListCtrlFileList->SetColumnWidth(columnid, wxLIST_AUTOSIZE);
+    UpdateFileHash(filepath, columnid, wxString(msg));
 }
 
 void MainWindow::UpdateFileHash(wxString filepath, long columnid, const wxString& msg)
 {
+    if (exited)
+        return;
     if (columnid <= 1)
     {
         return;
@@ -368,9 +343,12 @@ void MainWindow::UpdateFileHash(wxString filepath, long columnid, const wxString
         return;
     }
     long itemid = iter->second;
-    std::unique_lock<std::mutex> _l(mMutex);
-    mListCtrlFileList->SetItem(itemid, columnid, msg);
-    mListCtrlFileList->SetColumnWidth(columnid, wxLIST_AUTOSIZE);
+    wxCommandEvent* event = new wxCommandEvent(wxEVT_COMMAND_TEXT_UPDATED, UPDATE_TEXT_ID);
+    event->SetClientData(this);
+    event->SetString(msg);
+    event->SetInt((int)itemid);
+    event->SetExtraLong(columnid);
+    wxQueueEvent(this, event);
 }
 
 void MainWindow::DecreaseColumn(long id)
@@ -881,6 +859,41 @@ void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
     wxAboutBox(descrip,this);
 }
 
+void MainWindow::HandleMessage(wxCommandEvent& event)
+{
+    switch (event.GetId())
+    {
+    case UPDATE_STATUS_ID:
+    {
+        std::unique_lock<std::mutex> _l(mMutex);
+        mCalculatingFileCount--;
+        if (mCalculatingFileCount > 0)
+        {
+            wxString state = wxString::Format("有 %ld 个文件在计算中", mCalculatingFileCount);
+            mStatusBar->SetStatusText(state);
+        }
+        else if (mCalculatingFileCount == 0)
+        {
+            mStatusBar->SetStatusText(wxT("全部文件都已经计算完成"));
+            mMenuBar->EnableTop(0, true);
+            mMenuBar->EnableTop(1, true);
+            mMenuBar->EnableTop(2, true);
+        }
+    }
+    break;
+    case UPDATE_TEXT_ID:
+    {
+        long itemid = event.GetInt();
+        long columnid = event.GetExtraLong();
+        mListCtrlFileList->SetItem(itemid, columnid, event.GetString());
+        mListCtrlFileList->SetColumnWidth(columnid, wxLIST_AUTOSIZE);
+    }
+    break;
+    default:
+        break;
+    }
+}
+
 MainWindow::~MainWindow()
 {
     exited = true;
@@ -912,10 +925,11 @@ MainWindow::~MainWindow()
     {
         WriteStdStringToFile("appconfig", str);
     }
-    
+    Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MainWindow::HandleMessage), NULL, this);
 }
 MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器"))
 {
+    Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MainWindow::HandleMessage), NULL, this);
     SetIcon(wxICON(aaaaaaappIcon));
     mSerialNumberColumn = mListCtrlFileList->AppendColumn(wxT("序号"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
     mFilePathColumn = mListCtrlFileList->AppendColumn(wxT("文件路径"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);

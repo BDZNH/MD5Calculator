@@ -72,7 +72,7 @@ protected:
 	virtual void OnBase64Selected(wxCommandEvent& event) wxOVERRIDE;
 	virtual void OnAboutMeSelected(wxCommandEvent& event) wxOVERRIDE;
 
-	
+	void HandleMessage(wxCommandEvent& event);
 
 public:
 	~MainWindow();
