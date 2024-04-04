@@ -320,7 +320,7 @@ void MainWindow::CalculatFileHash(wxString filepath)
 
 void MainWindow::FinishCalculat()
 {
-    wxCommandEvent* event = new wxCommandEvent(wxEVT_COMMAND_TEXT_UPDATED, UPDATE_STATUS_ID);
+    wxMessageDispatchEvent* event = new wxMessageDispatchEvent(wxEVT_COMMAND_TEXT_UPDATED, UPDATE_STATUS_ID);
     wxQueueEvent(this,event);
 }
 
@@ -343,11 +343,10 @@ void MainWindow::UpdateFileHash(wxString filepath, long columnid, const wxString
         return;
     }
     long itemid = iter->second;
-    wxCommandEvent* event = new wxCommandEvent(wxEVT_COMMAND_TEXT_UPDATED, UPDATE_TEXT_ID);
-    event->SetClientData(this);
-    event->SetString(msg);
-    event->SetInt((int)itemid);
-    event->SetExtraLong(columnid);
+    wxMessageDispatchEvent* event = new wxMessageDispatchEvent(wxEVT_COMMAND_TEXT_UPDATED, UPDATE_TEXT_ID);
+    event->str1 = msg;
+    event->arg1 = (int)itemid;
+    event->arg2 = (columnid);
     wxQueueEvent(this, event);
 }
 
@@ -859,9 +858,9 @@ void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
     wxAboutBox(descrip,this);
 }
 
-void MainWindow::HandleMessage(wxCommandEvent& event)
+void MainWindow::HandleMessage(wxMessageDispatchEvent& event)
 {
-    switch (event.GetId())
+    switch (event.what)
     {
     case UPDATE_STATUS_ID:
     {
@@ -883,9 +882,9 @@ void MainWindow::HandleMessage(wxCommandEvent& event)
     break;
     case UPDATE_TEXT_ID:
     {
-        long itemid = event.GetInt();
-        long columnid = event.GetExtraLong();
-        mListCtrlFileList->SetItem(itemid, columnid, event.GetString());
+        long itemid = event.arg1;
+        long columnid = event.arg2;
+        mListCtrlFileList->SetItem(itemid, columnid, event.str1);
         mListCtrlFileList->SetColumnWidth(columnid, wxLIST_AUTOSIZE);
     }
     break;
@@ -925,11 +924,11 @@ MainWindow::~MainWindow()
     {
         WriteStdStringToFile("appconfig", str);
     }
-    Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MainWindow::HandleMessage), NULL, this);
+    Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxMessageDispatchEventHandler(MainWindow::HandleMessage), NULL, this);
 }
 MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器"))
 {
-    Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MainWindow::HandleMessage), NULL, this);
+    Connect(wxEVT_COMMAND_TEXT_UPDATED, wxMessageDispatchEventHandler(MainWindow::HandleMessage), NULL, this);
     SetIcon(wxICON(aaaaaaappIcon));
     mSerialNumberColumn = mListCtrlFileList->AppendColumn(wxT("序号"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
     mFilePathColumn = mListCtrlFileList->AppendColumn(wxT("文件路径"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);

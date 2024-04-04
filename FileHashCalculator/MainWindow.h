@@ -6,6 +6,7 @@
 #include <wx/clipbrd.h>
 #include <wx/notifmsg.h>
 #include "threadpool.h"
+#include "wxMessageDispatchEvent.h"
 class MainWindow :
     public MainFrame
 {
@@ -72,7 +73,7 @@ protected:
 	virtual void OnBase64Selected(wxCommandEvent& event) wxOVERRIDE;
 	virtual void OnAboutMeSelected(wxCommandEvent& event) wxOVERRIDE;
 
-	void HandleMessage(wxCommandEvent& event);
+	void HandleMessage(wxMessageDispatchEvent& event);
 
 public:
 	~MainWindow();

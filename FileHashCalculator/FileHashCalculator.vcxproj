@@ -212,6 +212,7 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="QRCodeDialog.cpp" />
     <ClCompile Include="QRCodeDialogImpl.cpp" />
+    <ClCompile Include="wxMessageDispatchEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base64Dialog.h" />
@@ -224,6 +225,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="svpng.h" />
     <ClInclude Include="threadpool.h" />
+    <ClInclude Include="wxMessageDispatchEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="appicon.rc" />
