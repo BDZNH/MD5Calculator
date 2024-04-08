@@ -6,6 +6,7 @@
 #include <wx/filedlg.h>
 #include <wx/version.h>
 #include <wx/aboutdlg.h>
+#include <wx/datetime.h>
 #include <vector>
 #include <sstream>
 #include <openssl/evp.h>
@@ -14,6 +15,7 @@
 #include "small.xpm"
 #include "QRCodeDialogImpl.h"
 #include "Base64DialogImpl.h"
+#include "RSADialogImpl.h"
 
 #define UPDATE_TEXT_ID wxID_HIGHEST+1
 #define UPDATE_STATUS_ID UPDATE_TEXT_ID+1
@@ -833,6 +835,12 @@ void MainWindow::OnBase64Selected(wxCommandEvent& event)
     dialog.ShowModal();
 }
 
+void MainWindow::OnRSASelected(wxCommandEvent& event)
+{
+    RSADialogImpl dialog(this);
+    dialog.ShowModal();
+}
+
 void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
 {
     wxString content = wxT("一个简单的用来计算文件哈希（CRC32/MD5/SHA1/SHA224/SHA256/SHA384/SHA512）和生成二维码的小工具\r\n");
@@ -849,7 +857,11 @@ void MainWindow::OnAboutMeSelected(wxCommandEvent& event)
     content.Append(QRCodeDialogImpl::GetVersion());
     wxAboutDialogInfo descrip;
     descrip.SetWebSite(wxT("https://github.com/BDZNH/MD5Calculator"), wxT("GitHub"));
-    descrip.SetCopyright(wxT("2022-2024. (c)BDZNH"));
+    wxString copyRight;
+    copyRight.Append("2022-");
+    copyRight.Append(wxDateTime::Now().Format("%Y"));
+    copyRight.Append(". (c)BDZNH");
+    descrip.SetCopyright(copyRight);
     descrip.SetDescription(content);
     descrip.SetName(GetTitle());
     wxArrayString developers;

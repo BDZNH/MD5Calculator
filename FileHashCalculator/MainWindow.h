@@ -71,6 +71,7 @@ protected:
 	virtual void OnClearListSelected(wxCommandEvent& event) wxOVERRIDE;
 	virtual void OnQrCodeSelected(wxCommandEvent& event) wxOVERRIDE;
 	virtual void OnBase64Selected(wxCommandEvent& event) wxOVERRIDE;
+	virtual void OnRSASelected(wxCommandEvent& event) wxOVERRIDE;
 	virtual void OnAboutMeSelected(wxCommandEvent& event) wxOVERRIDE;
 
 	void HandleMessage(wxMessageDispatchEvent& event);

@@ -79,6 +79,10 @@ MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, con
 	mMenuItemBase64 = new wxMenuItem(mMenuTools, wxID_ANY, wxString(wxT("Base64编解码")), wxEmptyString, wxITEM_NORMAL);
 	mMenuTools->Append(mMenuItemBase64);
 
+	wxMenuItem* mMenuItemRSA;
+	mMenuItemRSA = new wxMenuItem(mMenuTools, wxID_ANY, wxString(wxT("RSA/ECB/PKCS1PADDING 加解密")), wxEmptyString, wxITEM_NORMAL);
+	mMenuTools->Append(mMenuItemRSA);
+
 	mMenuBar->Append(mMenuTools, wxT("小工具"));
 
 	mMenuHelp = new wxMenu();
@@ -110,6 +114,7 @@ MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, con
 	mMenuEdit->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnClearListSelected), this, mMenuItemClear->GetId());
 	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnQrCodeSelected), this, mMenuItemQRCode->GetId());
 	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnBase64Selected), this, mMenuItemBase64->GetId());
+	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnRSASelected), this, mMenuItemRSA->GetId());
 	mMenuHelp->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnAboutMeSelected), this, mMenuItemAbout->GetId());
 }
 

@@ -212,6 +212,10 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="QRCodeDialog.cpp" />
     <ClCompile Include="QRCodeDialogImpl.cpp" />
+    <ClCompile Include="RSACipher.cpp" />
+    <ClCompile Include="RSADialog.cpp" />
+    <ClCompile Include="RSADialogImpl.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="wxMessageDispatchEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,8 +227,12 @@
     <ClInclude Include="QRCodeDialog.h" />
     <ClInclude Include="QRCodeDialogImpl.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RSACipher.h" />
+    <ClInclude Include="RSADialog.h" />
+    <ClInclude Include="RSADialogImpl.h" />
     <ClInclude Include="svpng.h" />
     <ClInclude Include="threadpool.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="wxMessageDispatchEvent.h" />
   </ItemGroup>
   <ItemGroup>

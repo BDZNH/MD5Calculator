@@ -66,6 +66,7 @@ protected:
 	virtual void OnClearListSelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnQrCodeSelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnBase64Selected(wxCommandEvent& event) { event.Skip(); }
+	virtual void OnRSASelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnAboutMeSelected(wxCommandEvent& event) { event.Skip(); }
 
 
