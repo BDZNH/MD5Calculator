@@ -352,42 +352,6 @@ void MainWindow::UpdateFileHash(wxString filepath, long columnid, const wxString
     wxQueueEvent(this, event);
 }
 
-void MainWindow::DecreaseColumn(long id)
-{
-    if (mFileMD5Column > id)
-    {
-        mFileMD5Column--;
-    }
-    if (mFileCRC32Column > id)
-    {
-        mFileCRC32Column--;
-    }
-    if (mFileSha1Column > id)
-    {
-        mFileSha1Column--;
-    }
-    if (mFileSha224Column > id)
-    {
-        mFileSha224Column--;
-    }
-    if (mFileSha256Column > id)
-    {
-        mFileSha256Column--;
-    }
-    if (mFileSha384Column > id)
-    {
-        mFileSha384Column--;
-    }
-    if (mFileSha512Column > id)
-    {
-        mFileSha512Column--;
-    }
-    if (mStateColumn > id)
-    {
-        mStateColumn--;
-    }
-}
-
 void MainWindow::OnCopyFilePathClicked(wxCommandEvent& event)
 {
     CopySelectedItemInfo(mFilePathColumn);
@@ -717,12 +681,12 @@ void MainWindow::OnCRC32Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileCRC32Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("CRC32"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableCRC32"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileCRC32Column);
-        DecreaseColumn(mFileCRC32Column);
+        mAppConfig.Write(wxT("HashToolEnableCRC32"), false);
         mFileCRC32Column = 0;
     }
 }
@@ -732,12 +696,12 @@ void MainWindow::OnMD5Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileMD5Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("MD5"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableMD5"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileMD5Column);
-        DecreaseColumn(mFileMD5Column);
+        mAppConfig.Write(wxT("HashToolEnableMD5"), false);
         mFileMD5Column = 0;
     }
 }
@@ -747,12 +711,12 @@ void MainWindow::OnSha1Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileSha1Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("SHA1"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableSha1"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileSha1Column);
-        DecreaseColumn(mFileSha1Column);
+        mAppConfig.Write(wxT("HashToolEnableSha1"), false);
         mFileSha1Column = 0;
     }
 }
@@ -762,12 +726,12 @@ void MainWindow::OnSha224Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileSha224Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("SHA224"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableSha224"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileSha224Column);
-        DecreaseColumn(mFileSha224Column);
+        mAppConfig.Write(wxT("HashToolEnableSha1"), false);
         mFileSha224Column = 0;
     }
 }
@@ -777,12 +741,12 @@ void MainWindow::OnSha256Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileSha256Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("SHA256"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableSha256"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileSha256Column);
-        DecreaseColumn(mFileSha256Column);
+        mAppConfig.Write(wxT("HashToolEnableSha256"), true);
         mFileSha256Column = 0;
     }
 }
@@ -792,12 +756,12 @@ void MainWindow::OnSha384Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileSha384Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("SHA384"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableSha384"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileSha384Column);
-        DecreaseColumn(mFileSha384Column);
+        mAppConfig.Write(wxT("HashToolEnableSha384"), false);
         mFileSha384Column = 0;
     }
 }
@@ -807,12 +771,12 @@ void MainWindow::OnSha512Selected(wxCommandEvent& event)
     if (event.IsChecked())
     {
         mFileSha512Column = mListCtrlFileList->InsertColumn(mStateColumn, wxT("SHA512"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-        mStateColumn = mListCtrlFileList->GetColumnCount() - 1;
+        mAppConfig.Write(wxT("HashToolEnableSha512"), true);
     }
     else
     {
         mListCtrlFileList->DeleteColumn(mFileSha512Column);
-        DecreaseColumn(mFileSha512Column);
+        mAppConfig.Write(wxT("HashToolEnableSha512"), false);
         mFileSha512Column = 0;
     }
 }
@@ -913,92 +877,49 @@ MainWindow::~MainWindow()
         delete mExector;
         mExector = nullptr;
     }
-    std::map<long, std::string> algorithms;
-    algorithms[mFileMD5Column] = "MD5";
-    algorithms[mFileCRC32Column] = "CRC32";
-    algorithms[mFileSha1Column] = "SHA1";
-    algorithms[mFileSha224Column] = "SHA224";
-    algorithms[mFileSha256Column] = "SHA256";
-    algorithms[mFileSha384Column] = "SHA384";
-    algorithms[mFileSha512Column] = "SHA512";
-    auto iter = algorithms.begin();
-    std::stringstream outstream;
-    while (iter != algorithms.end())
-    {
-        if (iter->first > 0)
-        {
-            outstream << iter->second << std::endl;
-        }
-        iter++;
-    }
-    std::string str = outstream.str();
-    if (str != mConfig)
-    {
-        WriteStdStringToFile("appconfig", str);
-    }
     Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxMessageDispatchEventHandler(MainWindow::HandleMessage), NULL, this);
 }
-MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器"))
+MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器")), mAppConfig(wxT("文件哈希计算器"))
 {
     Connect(wxEVT_COMMAND_TEXT_UPDATED, wxMessageDispatchEventHandler(MainWindow::HandleMessage), NULL, this);
     SetIcon(wxICON(aaaaaaappIcon));
     mSerialNumberColumn = mListCtrlFileList->AppendColumn(wxT("序号"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
     mFilePathColumn = mListCtrlFileList->AppendColumn(wxT("文件路径"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
 
-    if (wxFileExists("appconfig"))
-    {
-        mConfig = ReadFileToStdString("appconfig");
-        std::stringstream ss(mConfig);
-        std::string tmpstr;
-        while (ss >> tmpstr)
-        {
-            if (tmpstr == "CRC32")
-            {
-                mFileCRC32Column = mListCtrlFileList->AppendColumn(wxT("CRC32"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemCRC32->Check(true);
-            }
-            else if (tmpstr == "MD5")
-            {
-                mFileMD5Column = mListCtrlFileList->AppendColumn(wxT("MD5"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemMD5->Check(true);
-            }
-            else if (tmpstr == "SHA1")
-            {
-                mFileSha1Column = mListCtrlFileList->AppendColumn(wxT("SHA1"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemsha1->Check(true);
-            }
-            else if (tmpstr == "SHA224")
-            {
-                mFileSha224Column = mListCtrlFileList->AppendColumn(wxT("SHA224"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemsha224->Check(true);
-            }
-            else if (tmpstr == "SHA256")
-            {
-                mFileSha256Column = mListCtrlFileList->AppendColumn(wxT("SHA256"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemsha256->Check(true);
-            }
-            else if (tmpstr == "SHA384")
-            {
-                mFileSha384Column = mListCtrlFileList->AppendColumn(wxT("SHA384"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemsha384->Check(true);
-            }
-            else if (tmpstr == "SHA512")
-            {
-                mFileSha512Column = mListCtrlFileList->AppendColumn(wxT("SHA512"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
-                mMenuItemsha512->Check(true);
-            }
-        }
-    }
-    else
+    if (mAppConfig.ReadBool("HashToolEnableCRC32",true))
     {
         mFileCRC32Column = mListCtrlFileList->AppendColumn(wxT("CRC32"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
+        mMenuItemCRC32->Check(true);
+    }
+    if (mAppConfig.ReadBool("HashToolEnableMD5",true))
+    {
         mFileMD5Column = mListCtrlFileList->AppendColumn(wxT("MD5"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
         mMenuItemMD5->Check(true);
-        mMenuItemCRC32->Check(true);
-        std::stringstream instream;
-        instream << "CRC32" << std::endl;
-        instream << "MD5" << std::endl;
-        mConfig = instream.str();
+    }
+    if (mAppConfig.ReadBool("HashToolEnableSHA1",false))
+    {
+        mFileSha1Column = mListCtrlFileList->AppendColumn(wxT("SHA1"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
+        mMenuItemsha1->Check(true);
+    }
+    if (mAppConfig.ReadBool("HashToolEnableSHA224",false))
+    {
+        mFileSha224Column = mListCtrlFileList->AppendColumn(wxT("SHA224"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
+        mMenuItemsha224->Check(true);
+    }
+    if (mAppConfig.ReadBool("HashToolEnableSHA256",false))
+    {
+        mFileSha256Column = mListCtrlFileList->AppendColumn(wxT("SHA256"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
+        mMenuItemsha256->Check(true);
+    }
+    if (mAppConfig.ReadBool("HashToolEnableSHA384",false))
+    {
+        mFileSha384Column = mListCtrlFileList->AppendColumn(wxT("SHA384"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
+        mMenuItemsha384->Check(true);
+    }
+    if (mAppConfig.ReadBool("HashToolEnableSHA512",false))
+    {
+        mFileSha512Column = mListCtrlFileList->AppendColumn(wxT("SHA512"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
+        mMenuItemsha512->Check(true);
     }
 
     mStateColumn = mListCtrlFileList->AppendColumn(wxT("状态"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE);

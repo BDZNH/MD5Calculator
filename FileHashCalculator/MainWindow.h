@@ -5,12 +5,14 @@
 #include <mutex>
 #include <wx/clipbrd.h>
 #include <wx/notifmsg.h>
+#include <wx/config.h>
 #include "threadpool.h"
 #include "wxMessageDispatchEvent.h"
 class MainWindow :
     public MainFrame
 {
 private:
+	wxConfig mAppConfig;
     std::unordered_map<wxString, long> mFileListContainers;
 	std::mutex mMutex;
 
@@ -41,7 +43,6 @@ private:
 	void FinishCalculat();
 	void UpdateFileHash(wxString filepath, long columnid, std::string msg);
 	void UpdateFileHash(wxString filepath, long columnid, const wxString& msg);
-	void DecreaseColumn(long id);
 
 	void OnCopyFilePathClicked(wxCommandEvent& event);
 	void OnCopyCRC32Clicked(wxCommandEvent& event);
