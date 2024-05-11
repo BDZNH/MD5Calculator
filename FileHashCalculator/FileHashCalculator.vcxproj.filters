@@ -189,5 +189,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="small.xpm" />
+    <None Include="..\README.md" />
   </ItemGroup>
 </Project>

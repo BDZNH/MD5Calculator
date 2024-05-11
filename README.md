@@ -11,6 +11,8 @@
 2. openssl  md5计算
 3. [crc32](https://rosettacode.org/wiki/CRC-32#C)
 4. [threadpool](https://github.com/lzpong/threadpool) 用以支持同时计算多个文件，同时计算的文件个数是CPU虚拟核心数。
+5. [libqrencode](https://github.com/fukuchi/libqrencode) 用以支持生成二维码
+6. [svpng](http://github.com/miloyip/svpng)
 
 # 更新记录
  - 2022.04.07 初版提交
