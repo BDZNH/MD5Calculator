@@ -99,13 +99,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(Projectdir)thirdparty\libqrencode;$(IncludePath)</IncludePath>
+    <IncludePath>$(Projectdir);$(Projectdir)thirdparty\libqrencode;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(Projectdir)thirdparty\libqrencode;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(Projectdir);$(Projectdir)thirdparty\libqrencode;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-static-link|x64'">
-    <IncludePath>$(Projectdir)thirdparty\libqrencode;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(Projectdir);$(Projectdir)thirdparty\libqrencode;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release-static-link|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -239,6 +239,7 @@
   <ItemGroup>
     <ClInclude Include="Base64Dialog.h" />
     <ClInclude Include="Base64DialogImpl.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="crc32.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainWindow.h" />
@@ -250,7 +251,6 @@
     <ClInclude Include="RSADialogImpl.h" />
     <ClInclude Include="svpng.h" />
     <ClInclude Include="thirdparty\libqrencode\bitstream.h" />
-    <ClInclude Include="thirdparty\libqrencode\config.h" />
     <ClInclude Include="thirdparty\libqrencode\mask.h" />
     <ClInclude Include="thirdparty\libqrencode\mmask.h" />
     <ClInclude Include="thirdparty\libqrencode\mqrspec.h" />

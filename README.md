@@ -19,5 +19,4 @@
 1. 安装 vcpkg
 2. 通过 vcpkg 安装 wxWidgets,openssl
 3. 下载 https://github.com/fukuchi/libqrencode 至 FileHashCalculator/thirdparty/libqrencode
-4. 拷贝 FileHashCalculator/config.h 至 FileHashCalculator/thirdparty/libqrencode
-5. 编译
+4. 编译

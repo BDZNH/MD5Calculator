@@ -164,8 +164,8 @@
     <ClInclude Include="thirdparty\libqrencode\split.h">
       <Filter>libqrencode\头文件</Filter>
     </ClInclude>
-    <ClInclude Include="thirdparty\libqrencode\config.h">
-      <Filter>libqrencode\头文件</Filter>
+    <ClInclude Include="config.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
