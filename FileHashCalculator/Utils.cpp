@@ -9,7 +9,7 @@ std::string Utils::Base64Encode(const unsigned char* data, size_t size)
     }
     std::string ret;
     ret.resize(base64_len);
-    EVP_EncodeBlock((unsigned char*)ret.data(), data, size);
+    EVP_EncodeBlock((unsigned char*)ret.data(), data, static_cast<int>(size));
     return std::move(ret);
 }
 
