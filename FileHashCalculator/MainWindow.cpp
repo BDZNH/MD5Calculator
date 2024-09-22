@@ -94,7 +94,6 @@ void MainWindow::OnDrapFiles(wxDropFilesEvent& event)
 {
     if (event.GetNumberOfFiles() > 0)
     {
-        std::unique_lock<std::mutex> _l(mMutex);
         wxString* dropped = event.GetFiles();
         if (!dropped)
             return;
@@ -113,33 +112,7 @@ void MainWindow::OnDrapFiles(wxDropFilesEvent& event)
         }
         if (files.size() > 0)
         {
-            if (mExector == nullptr)
-            {
-                int threadNum = std::thread::hardware_concurrency() > 0 ? std::thread::hardware_concurrency() : 4;
-                mExector = new std::threadpool(threadNum);
-            }
-            for (size_t i = 0; i < files.size(); i++)
-            {
-                auto iter = mFileListContainers.find(files[i]);
-                if (iter != mFileListContainers.end())
-                {
-                    continue;
-                }
-                long itemCount = mListCtrlFileList->GetItemCount();
-                long id = mListCtrlFileList->InsertItem(itemCount, wxString::Format("%ld",itemCount+1));
-                mFileListContainers[files[i]] = id;
-                mListCtrlFileList->SetItem(id, mFilePathColumn, files[i]);
-                mListCtrlFileList->SetColumnWidth(mFilePathColumn, wxLIST_AUTOSIZE_USEHEADER);
-                mCalculatingFileCount++;
-                mExector->commit(std::bind(&MainWindow::CalculatFileHash, this, files[i]));
-            }
-            if (mCalculatingFileCount > 0)
-            {
-                mStatusBar->SetStatusText(wxString::Format("有 %ld 个文件在计算中", mCalculatingFileCount));
-                mMenuBar->EnableTop(0, false);
-                mMenuBar->EnableTop(1, false);
-                mMenuBar->EnableTop(2, false);
-            }
+            CalculatFilesHash(files);
         }
         else
         {
@@ -928,4 +901,40 @@ MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件�
     mListCtrlFileList->DragAcceptFiles(true);
     mListCtrlFileList->Bind(wxEVT_DROP_FILES, &MainWindow::OnDrapFiles, this, wxID_ANY);
     this->Center(wxBOTH);
+}
+
+void MainWindow::CalculatFilesHash(const wxArrayString& files)
+{
+    std::unique_lock<std::mutex> _l(mMutex);
+    if (mExector == nullptr)
+    {
+        int threadNum = std::thread::hardware_concurrency() > 0 ? std::thread::hardware_concurrency() : 4;
+        mExector = new std::threadpool(threadNum);
+    }
+    for (size_t i = 0; i < files.size(); i++)
+    {
+        if (wxFileName(files[i]).IsDir() || !wxFile::Exists(files[i]))
+        {
+            continue;
+        }
+        auto iter = mFileListContainers.find(files[i]);
+        if (iter != mFileListContainers.end())
+        {
+            continue;
+        }
+        long itemCount = mListCtrlFileList->GetItemCount();
+        long id = mListCtrlFileList->InsertItem(itemCount, wxString::Format("%ld", itemCount + 1));
+        mFileListContainers[files[i]] = id;
+        mListCtrlFileList->SetItem(id, mFilePathColumn, files[i]);
+        mListCtrlFileList->SetColumnWidth(mFilePathColumn, wxLIST_AUTOSIZE_USEHEADER);
+        mCalculatingFileCount++;
+        mExector->commit(std::bind(&MainWindow::CalculatFileHash, this, files[i]));
+    }
+    if (mCalculatingFileCount > 0)
+    {
+        mStatusBar->SetStatusText(wxString::Format("有 %ld 个文件在计算中", mCalculatingFileCount));
+        mMenuBar->EnableTop(0, false);
+        mMenuBar->EnableTop(1, false);
+        mMenuBar->EnableTop(2, false);
+    }
 }
