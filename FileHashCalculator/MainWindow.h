@@ -70,6 +70,7 @@ protected:
     virtual void OnSha384Selected(wxCommandEvent& event) wxOVERRIDE;
     virtual void OnSha512Selected(wxCommandEvent& event) wxOVERRIDE;
     virtual void OnClearListSelected(wxCommandEvent& event) wxOVERRIDE;
+    virtual void OnMenuItemSwitchCaseSelected(wxCommandEvent& event) wxOVERRIDE;
     virtual void OnQrCodeSelected(wxCommandEvent& event) wxOVERRIDE;
     virtual void OnBase64Selected(wxCommandEvent& event) wxOVERRIDE;
     virtual void OnRSASelected(wxCommandEvent& event) wxOVERRIDE;

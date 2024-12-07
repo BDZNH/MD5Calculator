@@ -301,6 +301,10 @@ void MainWindow::FinishCalculat()
 
 void MainWindow::UpdateFileHash(wxString filepath, long columnid, std::string msg)
 {
+    if (!mAppConfig.ReadBool("UseUpperCase",true))
+    {
+        std::transform(msg.begin(), msg.end(), msg.begin(), std::tolower);
+    }
     UpdateFileHash(filepath, columnid, wxString(msg));
 }
 
@@ -760,6 +764,34 @@ void MainWindow::OnClearListSelected(wxCommandEvent& event)
     mFileListContainers.clear();
 }
 
+void MainWindow::OnMenuItemSwitchCaseSelected(wxCommandEvent& event)
+{
+    mAppConfig.Write("UseUpperCase", event.IsChecked());
+    long columnCount = mListCtrlFileList->GetColumnCount();
+    long itemCount = mListCtrlFileList->GetItemCount();
+    bool useUpperCase = event.IsChecked();
+    if (columnCount > 3)
+    {
+        columnCount--;
+        for (long col = 2; col < columnCount; col++)
+        {
+            for (long item = 0; item < itemCount; item++)
+            {
+                wxString msg = mListCtrlFileList->GetItemText(item, col);
+                if (useUpperCase)
+                {
+                    msg.UpperCase();
+                }
+                else
+                {
+                    msg.MakeLower();
+                }
+                mListCtrlFileList->SetItem(item, col,msg);
+            }
+        }
+    }
+}
+
 void MainWindow::OnQrCodeSelected(wxCommandEvent& event)
 {
     QRCodeDialogImpl dialog(this);
@@ -859,6 +891,10 @@ MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件�
     mSerialNumberColumn = mListCtrlFileList->AppendColumn(wxT("序号"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);
     mFilePathColumn = mListCtrlFileList->AppendColumn(wxT("文件路径"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
 
+    if (mAppConfig.ReadBool("UseUpperCase", true))
+    {
+        mMenuItemUseUpperCase->Check(true);
+    }
     if (mAppConfig.ReadBool("HashToolEnableCRC32",true))
     {
         mFileCRC32Column = mListCtrlFileList->AppendColumn(wxT("CRC32"), wxLIST_FORMAT_CENTER, wxLIST_AUTOSIZE_USEHEADER);

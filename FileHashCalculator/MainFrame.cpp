@@ -68,6 +68,9 @@ MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, con
 	mMenuItemClear = new wxMenuItem(mMenuEdit, wxID_ANY, wxString(wxT("清空列表")), wxEmptyString, wxITEM_NORMAL);
 	mMenuEdit->Append(mMenuItemClear);
 
+	mMenuItemUseUpperCase = new wxMenuItem(mMenuEdit, wxID_ANY, wxString(wxT("使用大写")), wxEmptyString, wxITEM_CHECK);
+	mMenuEdit->Append(mMenuItemUseUpperCase);
+
 	mMenuBar->Append(mMenuEdit, wxT("编辑"));
 
 	mMenuTools = new wxMenu();
@@ -112,6 +115,7 @@ MainFrame::MainFrame(wxWindow* parent, wxWindowID id, const wxString& title, con
 	mMenuEditAddAlgorithm->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnSha384Selected), this, mMenuItemsha384->GetId());
 	mMenuEditAddAlgorithm->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnSha512Selected), this, mMenuItemsha512->GetId());
 	mMenuEdit->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnClearListSelected), this, mMenuItemClear->GetId());
+	mMenuEdit->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnMenuItemSwitchCaseSelected), this, mMenuItemUseUpperCase->GetId());
 	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnQrCodeSelected), this, mMenuItemQRCode->GetId());
 	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnBase64Selected), this, mMenuItemBase64->GetId());
 	mMenuTools->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::OnRSASelected), this, mMenuItemRSA->GetId());

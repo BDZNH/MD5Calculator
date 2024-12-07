@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version 4.1.0-0-g733bf3d)
+// C++ code generated with wxFormBuilder (version 4.2.1-0-g80c4cb6)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -25,7 +25,6 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-
 ///////////////////////////////////////////////////////////////////////////////
 /// Class MainFrame
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,6 +45,7 @@ protected:
 	wxMenuItem* mMenuItemsha256;
 	wxMenuItem* mMenuItemsha384;
 	wxMenuItem* mMenuItemsha512;
+	wxMenuItem* mMenuItemUseUpperCase;
 	wxMenu* mMenuTools;
 	wxMenu* mMenuHelp;
 	wxStatusBar* mStatusBar;
@@ -64,6 +64,7 @@ protected:
 	virtual void OnSha384Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnSha512Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnClearListSelected(wxCommandEvent& event) { event.Skip(); }
+	virtual void OnMenuItemSwitchCaseSelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnQrCodeSelected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnBase64Selected(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnRSASelected(wxCommandEvent& event) { event.Skip(); }
