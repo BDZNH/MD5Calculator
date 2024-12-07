@@ -665,6 +665,7 @@ void MainWindow::OnCRC32Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileCRC32Column);
         mAppConfig.Write(wxT("HashToolEnableCRC32"), false);
         mFileCRC32Column = 0;
+        mStateColumn--;
     }
 }
 
@@ -680,6 +681,7 @@ void MainWindow::OnMD5Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileMD5Column);
         mAppConfig.Write(wxT("HashToolEnableMD5"), false);
         mFileMD5Column = 0;
+        mStateColumn--;
     }
 }
 
@@ -695,6 +697,7 @@ void MainWindow::OnSha1Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileSha1Column);
         mAppConfig.Write(wxT("HashToolEnableSha1"), false);
         mFileSha1Column = 0;
+        mStateColumn--;
     }
 }
 
@@ -710,6 +713,7 @@ void MainWindow::OnSha224Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileSha224Column);
         mAppConfig.Write(wxT("HashToolEnableSha1"), false);
         mFileSha224Column = 0;
+        mStateColumn--;
     }
 }
 
@@ -725,6 +729,7 @@ void MainWindow::OnSha256Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileSha256Column);
         mAppConfig.Write(wxT("HashToolEnableSha256"), true);
         mFileSha256Column = 0;
+        mStateColumn--;
     }
 }
 
@@ -740,6 +745,7 @@ void MainWindow::OnSha384Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileSha384Column);
         mAppConfig.Write(wxT("HashToolEnableSha384"), false);
         mFileSha384Column = 0;
+        mStateColumn--;
     }
 }
 
@@ -755,6 +761,7 @@ void MainWindow::OnSha512Selected(wxCommandEvent& event)
         mListCtrlFileList->DeleteColumn(mFileSha512Column);
         mAppConfig.Write(wxT("HashToolEnableSha512"), false);
         mFileSha512Column = 0;
+        mStateColumn--;
     }
 }
 
