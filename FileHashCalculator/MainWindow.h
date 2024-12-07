@@ -42,7 +42,7 @@ private:
     void CalculatFileHash(wxString filepath);
     void FinishCalculat();
     void UpdateFileHash(wxString filepath, long columnid, std::string msg);
-    void UpdateFileHash(wxString filepath, long columnid, const wxString& msg);
+    void UpdateFileHash(wxString filepath, long columnid, wxString msg);
 
     void OnCopyFilePathClicked(wxCommandEvent& event);
     void OnCopyCRC32Clicked(wxCommandEvent& event);

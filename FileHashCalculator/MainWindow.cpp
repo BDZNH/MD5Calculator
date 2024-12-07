@@ -301,20 +301,20 @@ void MainWindow::FinishCalculat()
 
 void MainWindow::UpdateFileHash(wxString filepath, long columnid, std::string msg)
 {
-    if (!mAppConfig.ReadBool("UseUpperCase",true))
-    {
-        std::transform(msg.begin(), msg.end(), msg.begin(), std::tolower);
-    }
     UpdateFileHash(filepath, columnid, wxString(msg));
 }
 
-void MainWindow::UpdateFileHash(wxString filepath, long columnid, const wxString& msg)
+void MainWindow::UpdateFileHash(wxString filepath, long columnid, wxString msg)
 {
     if (exited)
         return;
     if (columnid <= 1)
     {
         return;
+    }
+    if (!mAppConfig.ReadBool("UseUpperCase", true))
+    {
+        msg.MakeLower();
     }
     auto iter = mFileListContainers.find(filepath);
     if (iter == mFileListContainers.end())
