@@ -858,6 +858,16 @@ void MainWindow::HandleMessage(wxMessageDispatchEvent& event)
         {
             wxString state = wxString::Format("有 %ld 个文件在计算中", mCalculatingFileCount);
             mStatusBar->SetStatusText(state);
+            if (mCalculatingFileCount > 1 && mAppProgressIndicator.IsAvailable())
+            {
+                int total = mListCtrlFileList->GetItemCount();
+                if (total >= mCalculatingFileCount)
+                {
+                    int finished = total - mCalculatingFileCount;
+                    int finishedRatio = finished * 100 / total;
+                    mAppProgressIndicator.SetValue(finishedRatio);
+                }
+            }
         }
         else if (mCalculatingFileCount == 0)
         {
@@ -865,6 +875,10 @@ void MainWindow::HandleMessage(wxMessageDispatchEvent& event)
             mMenuBar->EnableTop(0, true);
             mMenuBar->EnableTop(1, true);
             mMenuBar->EnableTop(2, true);
+            if (mAppProgressIndicator.IsAvailable())
+            {
+                mAppProgressIndicator.Reset();
+            }
         }
     }
     break;
@@ -874,6 +888,22 @@ void MainWindow::HandleMessage(wxMessageDispatchEvent& event)
         long columnid = event.arg2;
         mListCtrlFileList->SetItem(itemid, columnid, event.str1);
         mListCtrlFileList->SetColumnWidth(columnid, wxLIST_AUTOSIZE);
+        if (mAppProgressIndicator.IsAvailable() && mCalculatingFileCount == 1 && columnid == mStateColumn)
+        {
+            size_t beginOfPercenSymbol = event.str1.find_first_of('%');
+            if (beginOfPercenSymbol > 0)
+            {
+                wxString percent = event.str1.SubString(0, beginOfPercenSymbol-1);
+                int value = 0;
+                if (percent.ToInt(&value))
+                {
+                    if (0 <= value && value <= 100)
+                    {
+                        mAppProgressIndicator.SetValue(value);
+                    }
+                }
+            }
+        }
     }
     break;
     default:
@@ -891,7 +921,8 @@ MainWindow::~MainWindow()
     }
     Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxMessageDispatchEventHandler(MainWindow::HandleMessage), NULL, this);
 }
-MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器")), mAppConfig(wxT("文件哈希计算器"))
+
+MainWindow::MainWindow(wxWindow* parent):MainFrame(parent, wxID_ANY,wxT("文件哈希计算器")), mAppProgressIndicator(parent),mAppConfig(wxT("文件哈希计算器"))
 {
     Connect(wxEVT_COMMAND_TEXT_UPDATED, wxMessageDispatchEventHandler(MainWindow::HandleMessage), NULL, this);
     SetIcon(wxICON(aaaaaaappIcon));

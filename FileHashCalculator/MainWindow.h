@@ -6,12 +6,14 @@
 #include <wx/clipbrd.h>
 #include <wx/notifmsg.h>
 #include <wx/config.h>
+#include <wx/appprogress.h>
 #include "threadpool.h"
 #include "wxMessageDispatchEvent.h"
 class MainWindow :
     public MainFrame
 {
 private:
+    wxAppProgressIndicator mAppProgressIndicator;
     wxConfig mAppConfig;
     std::unordered_map<wxString, long> mFileListContainers;
     std::mutex mMutex;
