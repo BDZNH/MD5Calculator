@@ -16,7 +16,7 @@ std::string Utils::Base64Encode(const unsigned char* data, size_t size)
 bool Utils::Base64Decode(const std::string& src, std::vector<unsigned char>& out)
 {
     size_t srcLen = src.size();
-    if (srcLen % 4 != 0)
+    if ((srcLen % 4 != 0) || srcLen == 0)
     {
         return false;
     }
